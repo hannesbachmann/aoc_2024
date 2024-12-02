@@ -9,7 +9,7 @@ def read_input():
     return content
 
 
-def task_1(inputs):
+def task_01(inputs):
     diff = [[inputs[r][c] - inputs[r][c+1] for c in range(len(inputs[r]) - 1)] for r in range(len(inputs))]
     # allowed cases:
     # all negative (-1 to -3)
@@ -50,6 +50,6 @@ def task_02(inputs):
 
 if __name__ == '__main__':
     inputs = read_input()
-    num_correct_01 = task_1(inputs=inputs)
+    num_correct_01 = task_01(inputs=inputs)
     num_correct_02 = task_02(inputs=inputs)
     pass
