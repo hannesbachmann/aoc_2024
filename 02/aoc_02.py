@@ -3,7 +3,7 @@ import numpy as np
 
 def read_input():
     loc = 'aoc_02_input.txt'
-    # loc = 'example.txt'
+    # loc = 'aoc_02_example.txt'
     file = open(loc, 'r')
     content = [[int(n) for n in s.replace('\n', '').split(sep=' ')] for s in file.readlines()]
     return content
