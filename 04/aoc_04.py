@@ -56,7 +56,22 @@ def task_01(inputs):
 
 
 def task_02(inputs):
-    pass
+    relevant_seq = 'MAS'
+    # get 3x3 sub-matrices
+    window_size = 3
+    r, c = inputs.shape[0] - window_size + 1, inputs.shape[1] - window_size + 1
+    # (r*c, 3, 3)
+    matrices = np.asarray([np.asarray([inputs[i:i+window_size, j:j+window_size] for j in range(c)]) for i in range(r)]).reshape(r*c, window_size, window_size)
+    # check diagonals (two must match)
+    total = 0
+    for m in matrices:
+        d1 = int(reduce(lambda a, b: a + b, [m[i][i] for i in range(3)]) == relevant_seq)
+        d2 = int(reduce(lambda a, b: a + b, [m[i][i] for i in range(3)][::-1]) == relevant_seq)
+        d3 = int(reduce(lambda a, b: a + b, [m[i][2 - i] for i in range(3)]) == relevant_seq)
+        d4 = int(reduce(lambda a, b: a + b, [m[i][2 - i] for i in range(3)][::-1]) == relevant_seq)
+        if sum([d1, d2, d3, d4]) == 2:
+            total += 1
+    return total
 
 
 if __name__ == '__main__':
