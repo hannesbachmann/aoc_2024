@@ -56,12 +56,61 @@ def task_01(inputs):
 
 
 def task_02(inputs):
-    total = 0
+    rules = []
+    for line in inputs:
+        if line == '':
+            break
+        n = [int(d) for d in re.findall(r'[0-9]+', line)]
+        rules.append(n)
+    orderings = []
+    start_ordering = False
+    for line in inputs:
+        if start_ordering:
+            n = [int(d) for d in re.findall(r'[0-9]+', line)]
+            orderings.append(n)
+        if line == '':
+            start_ordering = True
+    # check orderings
+    mask_correct = []
+    for i_o in range(len(orderings)):
+        # check for each element of its correctly placed, swap if not
+        while not check_corr(orderings[i_o], rules):
+            for i_d1 in range(len(orderings[i_o])):
+                for i_d2 in range(len(orderings[i_o])):
+                    if i_d1 < i_d2:
+                        d1 = orderings[i_o][i_d1]
+                        d2 = orderings[i_o][i_d2]
+                        for r in rules:
+                            if d1 == r[1] and d2 == r[0]:
+                                orderings[i_o][i_d1] = d2
+                                orderings[i_o][i_d2] = d1
+                                break
+    # get middle position of the correct ones
+    middles = []
+    for c in orderings:
+        l = len(c)
+        mid_pos = int(l // 2)
+        middles.append(c[mid_pos])
+    total = sum(middles)
     return total
+
+
+def check_corr(ordering, rules):
+    corr = True
+    # check for each element of its correctly placed
+    for i_d1, d1 in enumerate(ordering):
+        if corr:
+            for i_d2, d2 in enumerate(ordering):
+                if i_d1 < i_d2 and corr:
+                    for r in rules:
+                        if d1 == r[1] and d2 == r[0]:
+                            corr = False
+                            break
+    return corr
 
 
 if __name__ == '__main__':
     inputs = read_input()
     t1_solution = task_01(inputs)
-    t2_solution = task_02(inputs)
+    t2_solution = task_02(inputs) - t1_solution
     pass
