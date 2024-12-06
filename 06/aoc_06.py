@@ -93,12 +93,29 @@ def task_02(inputs):
     start_position = np.where(inputs=='^')[0][0], np.where(inputs=='^')[1][0]
     direction = '^'
     position = start_position
-    # store visited informations
+    # store visited information
     visit_positions_mask = np.zeros(shape=inputs.shape)
     visit_directions_mask = np.zeros(shape=[inputs.shape[0], inputs.shape[1], 4])
+    placed_opstacle_mask = np.zeros(shape=[inputs.shape[0], inputs.shape[1]])
+    obstacle_count = 0
     while 1:
         visit_positions_mask[position[0]][position[1]] = 1
         if direction == '^':
+            # mask all between two '#' with this direction
+            c_p = position
+            for i in range(inputs.shape[0]):
+                if c_p[0]-i == -1:
+                    break
+                if inputs[c_p[0]-i][c_p[1]] == '#':
+                    break
+                visit_directions_mask[c_p[0]-i][c_p[1]][0] = 1
+            for i in range(inputs.shape[0]):
+                if c_p[0]+i == inputs.shape[0]:
+                    break
+                if inputs[c_p[0]+i][c_p[1]] == '#':
+                    break
+                visit_directions_mask[c_p[0]+i][c_p[1]][0] = 1
+            # visit_directions_mask[position[0]][position[1]][0] = 1
             # move up
             if position[0] == 0:
                 break
@@ -110,8 +127,26 @@ def task_02(inputs):
                 # move fwd
                 new_position = [position[0]-1, position[1]]
                 new_direction = direction
-            visit_directions_mask[new_position[0]][new_position[1]][0] = 1
+                # if visit_positions_mask[position[0]][position[1]] == 1 and \
+                if visit_directions_mask[position[0]][position[1]][2] == 1:
+                    placed_opstacle_mask[position[0]-1][position[1]] = 1
+                    obstacle_count += 1
         elif direction == 'v':
+            # mask all between two '#' with this direction
+            c_p = position
+            for i in range(inputs.shape[0]):
+                if c_p[0]-i == -1:
+                    break
+                if inputs[c_p[0]-i][c_p[1]] == '#':
+                    break
+                visit_directions_mask[c_p[0]-i][c_p[1]][1] = 1
+            for i in range(inputs.shape[0]):
+                if c_p[0]+i == inputs.shape[0]:
+                    break
+                if inputs[c_p[0]+i][c_p[1]] == '#':
+                    break
+                visit_directions_mask[c_p[0]+i][c_p[1]][1] = 1
+            # visit_directions_mask[position[0]][position[1]][1] = 1
             # move down
             if position[0] == inputs.shape[0]-1:
                 break
@@ -123,8 +158,26 @@ def task_02(inputs):
                 # move fwd
                 new_position = [position[0]+1, position[1]]
                 new_direction = direction
-            visit_directions_mask[new_position[0]][new_position[1]][1] = 1
+                # if visit_positions_mask[position[0]][position[1]] == 1 and \
+                if visit_directions_mask[position[0]][position[1]][3] == 1:
+                    placed_opstacle_mask[position[0]+1][position[1]] = 1
+                    obstacle_count += 1
         elif direction == '>':
+            # mask all between two '#' with this direction
+            c_p = position
+            for i in range(inputs.shape[1]):
+                if c_p[1]-i == -1:
+                    break
+                if inputs[c_p[0]][c_p[1]-i] == '#':
+                    break
+                visit_directions_mask[c_p[0]][c_p[1]-i][2] = 1
+            for i in range(inputs.shape[1]):
+                if c_p[1]+i == inputs.shape[1]:
+                    break
+                if inputs[c_p[0]][c_p[1]+i] == '#':
+                    break
+                visit_directions_mask[c_p[0]][c_p[1]+i][2] = 1
+            # visit_directions_mask[position[0]][position[1]][2] = 1
             # move right
             if position[1] == inputs.shape[1] - 1:
                 break
@@ -136,8 +189,26 @@ def task_02(inputs):
                 # move fwd
                 new_position = [position[0], position[1]+1]
                 new_direction = direction
-            visit_directions_mask[new_position[0]][new_position[1]][2] = 1
+                # if visit_positions_mask[position[0]][position[1]] == 1 and \
+                if visit_directions_mask[position[0]][position[1]][1] == 1:
+                    placed_opstacle_mask[position[0]][position[1]+1] = 1
+                    obstacle_count += 1
         elif direction == '<':
+            # mask all between two '#' with this direction
+            c_p = position
+            for i in range(inputs.shape[1]):
+                if c_p[1]-i == -1:
+                    break
+                if inputs[c_p[0]][c_p[1]-i] == '#':
+                    break
+                visit_directions_mask[c_p[0]][c_p[1]-i][3] = 1
+            for i in range(inputs.shape[1]):
+                if c_p[1]+i == inputs.shape[1]:
+                    break
+                if inputs[c_p[0]][c_p[1]+i] == '#':
+                    break
+                visit_directions_mask[c_p[0]][c_p[1]+i][3] = 1
+            # visit_directions_mask[position[0]][position[1]][3] = 1
             # move left
             if position[1] == 0:
                 break
@@ -149,18 +220,21 @@ def task_02(inputs):
                 # move fwd
                 new_position = [position[0], position[1]-1]
                 new_direction = direction
-            visit_directions_mask[new_position[0]][new_position[1]][3] = 1
+                # if visit_positions_mask[position[0]][position[1]] == 1 and \
+                if visit_directions_mask[position[0]][position[1]][0] == 1:
+                    placed_opstacle_mask[position[0]][position[1]-1] = 1
+                    obstacle_count += 1
         direction = new_direction
         position = new_position
         if visit_positions_mask[new_position[0]][new_position[1]] == 1 and sum(visit_directions_mask[new_position[0]][new_position[1]]) == 4:
             break
 
-    total = 0
+    total = obstacle_count
     return total
 
 
 if __name__ == '__main__':
     inputs = read_input()
-    t1_solution = task_01(inputs)
+    # t1_solution = task_01(inputs)
     t2_solution = task_02(inputs)
     pass
