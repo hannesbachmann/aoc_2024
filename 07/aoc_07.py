@@ -4,8 +4,8 @@ import itertools
 
 
 def read_input():
-    loc = 'aoc_08_input.txt'
-    # loc = 'aoc_08_example.txt'
+    loc = 'aoc_07_input.txt'
+    # loc = 'aoc_07_example.txt'
     file = open(loc, 'r')
     content = [s.replace('\n', '') for s in file.readlines()]
     return content
@@ -51,7 +51,48 @@ def task_01(inputs):
 
 
 def task_02(inputs):
+    input_nums = []
+    options = []
+    for i in inputs:
+        nums = [int(d) for d in re.findall(r'[0-9]+', i)]
+        input_nums.append(nums)
+        options.append([c for c in itertools.product(range(3), repeat=len(nums[1:])-1)])
+        pass
     total = 0
+    all_tests = len(inputs)
+    t = 0
+    # test all options (brute force) until one is found
+    for opt, inp in zip(options, input_nums):
+        t += 1
+        print(f'test {t+1} of {all_tests}')
+        sol_found = False
+        test_value = inp[0]
+        rest_values = inp[1:]
+        for o in opt:
+            if sol_found:
+                break
+            curr_res = rest_values[0]
+            for rule, v in zip(o, rest_values[1:]):
+                if sol_found:
+                    break
+                if rule == 0:
+                    # add
+                    curr_res += v
+                elif rule == 1:
+                    # mul
+                    curr_res *= v
+                elif rule == 2:
+                    # concat
+                    curr_res = int(str(curr_res) + str(v))
+                # test if already larger to save time, use next combination
+                if curr_res > test_value:
+                    break
+            if curr_res == test_value:
+                sol_found = True
+                break
+            pass
+        if sol_found:
+            total += test_value
     return total
 
 
