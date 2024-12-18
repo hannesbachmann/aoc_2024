@@ -69,12 +69,12 @@ def task_02(inputs):
 
     return last_pos
 # (22, 20)
-# version 1: 235.8 sec
-# version 2: 8.9
+# version 1: 235.8 sec  (brute force)
+# version 2: 8.9 sec
 
 
 if __name__ == '__main__':
     inputs = read_input()
-    # t1_solution = task_01(inputs)
+    t1_solution = task_01(inputs)
     t2_solution = task_02(inputs)
     pass
